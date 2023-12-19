@@ -1,0 +1,68 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net7.0-windows</TargetFramework>
+    <Nullable>disable</Nullable>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="PinkyChessAsset\BishopB.png" />
+    <None Remove="PinkyChessAsset\BishopW.png" />
+    <None Remove="PinkyChessAsset\Board.png" />
+    <None Remove="PinkyChessAsset\CursorB.cur" />
+    <None Remove="PinkyChessAsset\CursorW.cur" />
+    <None Remove="PinkyChessAsset\icon.ico" />
+    <None Remove="PinkyChessAsset\KingB.png" />
+    <None Remove="PinkyChessAsset\KingW.png" />
+    <None Remove="PinkyChessAsset\KnightB.png" />
+    <None Remove="PinkyChessAsset\KnightW.png" />
+    <None Remove="PinkyChessAsset\PawnB.png" />
+    <None Remove="PinkyChessAsset\PawnW.png" />
+    <None Remove="PinkyChessAsset\QueenB.png" />
+    <None Remove="PinkyChessAsset\QueenW.png" />
+    <None Remove="PinkyChessAsset\RookB.png" />
+    <None Remove="PinkyChessAsset\RookW.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ChessLib\ChessLib.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="PinkyChessAsset\BishopB.png" />
+    <Resource Include="PinkyChessAsset\BishopW.png" />
+    <Resource Include="PinkyChessAsset\Board.png" />
+    <Resource Include="PinkyChessAsset\CursorB.cur" />
+    <Resource Include="PinkyChessAsset\CursorW.cur" />
+    <Resource Include="PinkyChessAsset\icon.ico" />
+    <Resource Include="PinkyChessAsset\KingB.png" />
+    <Resource Include="PinkyChessAsset\KingW.png" />
+    <Resource Include="PinkyChessAsset\KnightB.png" />
+    <Resource Include="PinkyChessAsset\KnightW.png" />
+    <Resource Include="PinkyChessAsset\PawnB.png" />
+    <Resource Include="PinkyChessAsset\PawnW.png" />
+    <Resource Include="PinkyChessAsset\QueenB.png" />
+    <Resource Include="PinkyChessAsset\QueenW.png" />
+    <Resource Include="PinkyChessAsset\RookB.png" />
+    <Resource Include="PinkyChessAsset\RookW.png" />
+    <Resource Include="PinkyChessAsset\BishopB.png" />
+    <Resource Include="PinkyChessAsset\BishopW.png" />
+    <Resource Include="PinkyChessAsset\Board.png" />
+    <Resource Include="PinkyChessAsset\CursorB.cur" />
+    <Resource Include="PinkyChessAsset\CursorW.cur" />
+    <Resource Include="PinkyChessAsset\icon.ico" />
+    <Resource Include="PinkyChessAsset\KingB.png" />
+    <Resource Include="PinkyChessAsset\KingW.png" />
+    <Resource Include="PinkyChessAsset\KnightB.png" />
+    <Resource Include="PinkyChessAsset\KnightW.png" />
+    <Resource Include="PinkyChessAsset\PawnB.png" />
+    <Resource Include="PinkyChessAsset\PawnW.png" />
+    <Resource Include="PinkyChessAsset\QueenB.png" />
+    <Resource Include="PinkyChessAsset\QueenW.png" />
+    <Resource Include="PinkyChessAsset\RookB.png" />
+    <Resource Include="PinkyChessAsset\RookW.png" />
+  </ItemGroup>
+
+</Project>
