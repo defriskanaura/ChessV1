@@ -1,32 +1,38 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ChessLib
+﻿namespace ChessLib
 {
-    public class ChessBoard : Board1
+    public class ChessBoard : IBoard
     {
-        public new int row;
-        public new int column;
-        public new Piece[,] square;
-        public ChessBoard(int rows, int cols)
+        public int Id { get; }
+        public int Row { get; }
+        public int Column { get; }
+        public IPiece[,] Square { get; }
+        public ChessBoard(int row, int col)
         {
-            row = rows;
-            column = cols;
-            Piece[,] pieces = new Piece[rows, cols];
+            Row = row;
+            Column = col;
+            Square = new IPiece[Row, Column];
+            GenerateID.Board++;
+            Id = GenerateID.Board;
         }
-        public new Piece this[int row, int col]
+        public IPiece this[int row, int col]
         {
-            get { return square[row, col]; }
-            set { square[row, col] = value; }
+            get { return Square[row, col]; }
+            set { Square[row, col] = value; }
+        }
+        public IPiece this[Position pos]
+        {
+            get { return Square[pos.Row, pos.Column]; }
+            set { Square[pos.Row, pos.Column] = value; }
+        }
+        
+        public bool IsInside(Position pos, IBoard board)
+        {
+            return pos.Row >= 0 && pos.Row < Row && pos.Column >= 0 && pos.Column < Column;
         }
 
-        public new Piece this[Position pos]
+        public bool IsEmpty(Position pos, IBoard board)
         {
-            get { return this[pos.Row, pos.Column]; }
-            set { this[pos.Row, pos.Column] = value; }
+            return board[pos] == null;
         }
     }
 }

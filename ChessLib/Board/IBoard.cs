@@ -1,27 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ChessLib
+﻿namespace ChessLib
 {
-    public abstract class Board1
+    public interface IBoard
     {
-        public int row;
-        public int column;
-        public Piece[,] square;
-        public Piece this[int row, int col]
+        public int Id { get; }
+        public int Row { get; }
+        public int Column { get; }
+        public IPiece[,] Square { get; }
+        public IPiece this[int row, int col]
         {
-            get { return square[row, col]; }
-            set { square[row, col] = value; }
+            get { return Square[row, col]; }
+            set { Square[row, col] = value; }
         }
+        public IPiece this[Position pos]
+        {
+            get { return Square[pos.Row, pos.Column]; }
+            set { Square[pos.Row, pos.Column] = value; }
+        }
+        public bool IsInside(Position pos, IBoard board);
 
-        public Piece this[Position pos]
-        {
-            get { return this[pos.Row, pos.Column]; }
-            set { this[pos.Row, pos.Column] = value; }
-        }
+        public bool IsEmpty(Position pos, IBoard board);
     }
 }

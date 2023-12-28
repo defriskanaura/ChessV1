@@ -6,6 +6,10 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using ChessLib;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using NLog;
+using NLog.Extensions.Logging;
 
 namespace ChessUI
 {
@@ -16,18 +20,34 @@ namespace ChessUI
     {
         private readonly Image[,] pieceImages = new Image[8, 8];
         private readonly Rectangle[,] highlights = new Rectangle[8, 8];
-        private readonly Dictionary<Position, Move> moveCache = new Dictionary<Position, Move>();
+        private readonly Dictionary<Position, IMove> moveCache = new Dictionary<Position, IMove>();
 
-        private GameController gameController;
+        private GameManager gameController;
         private Position selectedPos = null;
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
         public MainWindow()
         {
+            IServiceCollection services = new ServiceCollection().AddLogging(logBuilder =>
+            {
+                logBuilder.ClearProviders();
+                logBuilder.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Information);
+                logBuilder.AddNLog("nlog.config");
+            });
+
+            IServiceProvider serviceProvider = services.BuildServiceProvider();
+
+            var logger = serviceProvider.GetRequiredService<ILogger<GameManager>>();
             InitializeComponent();
             InitializeBoard();
-            gameController = new GameController(ColorType.White, Board.Initial());
-            DrawBoard(gameController.Board);
+            ChessBoard chessBoard = new ChessBoard(8, 8);
+            gameController = new GameManager(ColorType.White, chessBoard, logger);
+            gameController.AddStartPieces();
+            DrawBoard(gameController.GetBoard());
             SetCursor(gameController.GetCurrentColor());
+            //gameController = new GameController(ColorType.White, Board.Initial());
+            //DrawBoard(gameController.Board);
+            //SetCursor(gameController.GetCurrentColor());
         }
 
         private void InitializeBoard()
@@ -47,13 +67,13 @@ namespace ChessUI
             }
         }
 
-        private void DrawBoard(Board board)
+        private void DrawBoard(IBoard board)
         {
             for (int r = 0; r < 8; r++)
             {
                 for (int c = 0; c < 8; c++)
                 {
-                    Piece piece = board[r, c];
+                    IPiece piece = board[r, c];
                     pieceImages[r, c].Source = Images.GetImage(piece);
                 }
             }
@@ -89,7 +109,7 @@ namespace ChessUI
 
         private void OnFromPositionSelected(Position pos)
         {
-            IEnumerable<Move> moves = gameController.LegalMovesForPiece(pos);
+            IEnumerable<IMove> moves = gameController.LegalMovesForPiece(pos);
 
             if (moves.Any())
             {
@@ -104,7 +124,7 @@ namespace ChessUI
             selectedPos = null;
             HideHighlights();
 
-            if (moveCache.TryGetValue(pos, out Move move))
+            if (moveCache.TryGetValue(pos, out IMove move))
             {
                 if (move.Type == MoveType.PawnPromotion)
                 {
@@ -128,15 +148,15 @@ namespace ChessUI
             promMenu.PieceSelected += type =>
             {
                 MenuContainer.Content = null;
-                Move promMove = new PawnPromotion(from, to, type);
+                IMove promMove = new ChessPawnPromotion(from, to, type);
                 HandleMove(promMove);
             };
         }
 
-        private void HandleMove(Move move)
+        private void HandleMove(IMove move)
         {
-            gameController.MakeMove(move);
-            DrawBoard(gameController.Board);
+            gameController.MovePiece(move);
+            DrawBoard(gameController.GetBoard());
             SetCursor(gameController.GetCurrentColor());
 
             if (gameController.IsGameOver())
@@ -145,11 +165,11 @@ namespace ChessUI
             }
         }
 
-        private void CacheMoves(IEnumerable<Move> moves)
+        private void CacheMoves(IEnumerable<IMove> moves)
         {
             moveCache.Clear();
 
-            foreach (Move move in moves)
+            foreach (IMove move in moves)
             {
                 moveCache[move.ToPos] = move;
             }
@@ -214,8 +234,10 @@ namespace ChessUI
             selectedPos = null;
             HideHighlights();
             moveCache.Clear();
-            gameController = new GameController(ColorType.White, Board.Initial());
-            DrawBoard(gameController.Board);
+            ChessBoard chessBoard = new ChessBoard(8, 8);
+            gameController = new GameManager(ColorType.White, chessBoard);
+            gameController.AddStartPieces();
+            DrawBoard(gameController.GetBoard());
             SetCursor(gameController.GetCurrentColor());
         }
 
